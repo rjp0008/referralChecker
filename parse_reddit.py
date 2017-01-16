@@ -15,7 +15,12 @@ for x in list(reversed(range(0,len(lines)))):
 
 
 for line in lines:
-    submission = reddit.subreddit('churning').search("Official " + line + " Referral",sort='new').next()
+    if "Delta" not in line:
+        continue
+    iterator = reddit.subreddit('churning').search("Official " + line + " Referral",sort='new')
+    submission = iterator.next()
+    while "Referral" not in submission.title:
+        submission = iterator.next()
     text = {}
     submission.comments.replace_more(limit=0)
     for top_level_comment in submission.comments:
