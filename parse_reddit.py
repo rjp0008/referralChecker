@@ -13,17 +13,20 @@ for x in list(reversed(range(0,len(lines)))):
     else:
         lines[x] = lines[x].split('[')[1].split(']')[0]
 
+username = 'rjp0008'
 
 for line in lines:
-    if "Delta" not in line:
+    if "Delta" not in line or "Platinum" not in line:
         continue
-    iterator = reddit.subreddit('churning').search("Official " + line + " Referral",sort='new')
+    iterator = reddit.subreddit('churning').search("Official " + line + " Referral Thread",sort='new')
     submission = iterator.next()
-    while "Referral" not in submission.title:
+    while "Official " + line + " Referral Thread" not in submission.title:
         submission = iterator.next()
     text = {}
     submission.comments.replace_more(limit=0)
     for top_level_comment in submission.comments:
+            if top_level_comment.author == 'rjp0008':
+                print("found me")
             res = requests.get(top_level_comment.body)
             res.raise_for_status()
             soup = bs4.BeautifulSoup(res.text,'html.parser')
