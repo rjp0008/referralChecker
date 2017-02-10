@@ -1,11 +1,23 @@
 import praw, secrets, bs4, requests
 from praw.models import MoreComments
 import io
+import difflib
+import sys
 
 reddit = praw.Reddit(client_id=secrets.id,client_secret=secrets.api_key,user_agent=secrets.user_agent)
 
 lines = []
 lines = reddit.subreddit('churning').wiki.__getitem__('ccreferrals').content_md.split('*')
+
+with open('0.txt','r') as zero:
+    with open('1.txt','r') as one:
+        a = zero.readlines()
+        b = one.readlines()
+for x in difflib.unified_diff(a,b,lineterm=''):
+    if x.startswith('-') or x.startswith('+'):
+        if len(x.strip()) > 10:
+            print(x.strip())
+
 
 for x in list(reversed(range(0,len(lines)))):
     if ')' not in lines[x]:
@@ -16,7 +28,7 @@ for x in list(reversed(range(0,len(lines)))):
 username = 'rjp0008'
 
 for line in lines:
-    if "Delta" not in line or "Platinum" not in line:
+    if "Delta" not in line or "Gold" not in line:
         continue
     iterator = reddit.subreddit('churning').search("Official " + line + " Referral Thread",sort='new')
     submission = iterator.next()
